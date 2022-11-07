@@ -1,7 +1,8 @@
 #' Randomize a fraction of a vector
 #'
 #' Randomize a fraction of a vector: as the negative control of SpatialKrigingCV
-#' 
+#'
+#' @importFrom stats runif
 #' @param x         The vector to randomize
 #' @param fraction  The fraction to randomize; a numeric value from 0 to 1
 #' @param method    Randomization methods: "shuffle" to randomly shuffle the given part of x; "uniform" to generate values from a unifrom distribution

@@ -3,18 +3,18 @@
 #'
 #' A brief function to calculate the correlation between all cells compared to one spot in ST data
 #'
-#' @import stats
+#' @importFrom stats cor
 #' @param sc.data           A data.frame indicating the scRNA-seq data; each column is a cell and each row is a gene
 #' @param ST.data.column    A vector containing the gene expression of a given spot
 #' @param method.use        a character string indicating which correlation coefficient (or covariance) is to be computed: "pearson", "kendall" or "spearman"
-#' @return A vector of correlations between cells and one spot 
+#' @return A vector of correlations between cells and one spot
 #' @export
 CalcCor <- function(sc.data,
                     ST.data.column,
                     method.use = "pearson"){
-  res <- apply(as.matrix(sc.data), 
-               2, 
-               function(X){cor(X, 
+  res <- apply(as.matrix(sc.data),
+               2,
+               function(X){cor(X,
                                ST.data.column,
                                method = method.use)})
   return(res)
@@ -24,17 +24,17 @@ CalcCor <- function(sc.data,
 #' Calculate the cosine similarity between all scRNA-seq cells and one ST spots
 #'
 #' A brief function to calculate the cosine similarity between all cells compared to one spot in ST data
-#' 
+#'
 #' @importFrom lsa cosine
 #' @param sc.data           A data.frame indicating the scRNA-seq data; each column is a cell and each row is a gene
 #' @param ST.data.column    A vector containing the gene expression of a given spot
-#' @return A vector of cosine similarity between cells and one spot 
+#' @return A vector of cosine similarity between cells and one spot
 #' @export
 CalcCos <- function(sc.data,
                     ST.data.column){
-  res <- apply(as.matrix(sc.data), 
-               2, 
-               function(X){cosine(X, 
+  res <- apply(as.matrix(sc.data),
+               2,
+               function(X){cosine(X,
                                   ST.data.column)})
   return(res)
 }
@@ -42,7 +42,7 @@ CalcCos <- function(sc.data,
 #' Find cell most correlated with the given spot.
 #'
 #' A brief function to find the cell which has the largest correlation with the given spot.
-#' 
+#'
 #' @param cor.res   A vector of correlations/cosine similarity between cells and one spot; obtained by CalcCor or CalcCos
 #' @return A character; the name of the cell
 #' @export
@@ -57,7 +57,7 @@ FindTopCell <- function(cor.res){
 #' Based on the correlation, perform the forward selecting to decompose the spot by cells from scRNA-seq data;
 #' For one spot, do the iteration until the general correlation is larger than 0.8 or doesn't increase
 #'
-#' @import stats
+#' @importFrom stats cor
 #' @param sc.data     A data.frame indicating the scRNA-seq data; each column is a cell and each row is a gene
 #' @param ST.data     A data.frame indicating the ST data; each column is a spot and each row is a gene
 #' @param spot.number The number of spot to choose; should be an integer indicating the column number in ST data
@@ -77,7 +77,7 @@ DecomposeSpot <- function(sc.data,
   cell.list <- c(cell.list, top.cell)
   spot.decompose <- sc.data[,top.cell]
   sc.data <- sc.data[,-which(colnames(sc.data) == top.cell)]
-  
+
   diff <- 1
   general.cor <- cor(spot.vector, spot.decompose)
   iter <- 0

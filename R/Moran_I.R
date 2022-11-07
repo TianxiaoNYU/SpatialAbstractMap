@@ -4,7 +4,7 @@
 #'
 #' On a given spatial coordinates, use the inverse distance matrix to calculate the Moran's I
 #'
-#' @import ape
+#' @importFrom ape Moran.I
 #' @param gene    A vector of gene's expression value. Should correspond to the IDM
 #' @param dist_inv  The inverse distance matrix
 #' @return A 2-value vector containing the observed Moran's I and the p-value
