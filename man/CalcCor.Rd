@@ -10,6 +10,8 @@ CalcCor(sc.data, ST.data.column, method.use = "pearson")
 \item{sc.data}{A data.frame indicating the scRNA-seq data; each column is a cell and each row is a gene}
 
 \item{ST.data.column}{A vector containing the gene expression of a given spot}
+
+\item{method.use}{a character string indicating which correlation coefficient (or covariance) is to be computed: "pearson", "kendall" or "spearman"}
 }
 \value{
 A vector of correlations between cells and one spot

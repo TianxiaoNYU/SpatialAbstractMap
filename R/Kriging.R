@@ -70,6 +70,8 @@ integrateCoordinate <- function(spatial.data,
 #' Second sub-function of SpatialKriging. Fit the Kriging model on the integrated ST data. 
 #'
 #' @import gstat
+#' @importFrom grDevices dev.off
+#' @importFrom grDevices pdf
 #' @param spatial.data  Integrated ST data from integrateCoordinate.
 #' @param gene.id       Gene ID to perform Kriging. A character
 #' @param Kriging.cutoff      Kriging parameters setting the max range of model; a numeric value
@@ -127,6 +129,7 @@ createGridDataframe <- function(spatial.data,
 #' Last sub-function of SpatialKriging. Predict the spatial profile of given gene on the newly-created grid.
 #' 
 #' @import gstat
+#' @import dplyr
 #' @param spatial.data  Integrated ST data from integrateCoordinate.
 #' @param new_spatial_grid A data.frame containing the new grid coordinates. Generated from createGridDataframe
 #' @param gene.id       Gene ID to perform Kriging. A character

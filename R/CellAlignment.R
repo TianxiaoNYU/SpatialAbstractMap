@@ -3,8 +3,10 @@
 #'
 #' A brief function to calculate the correlation between all cells compared to one spot in ST data
 #'
+#' @import stats
 #' @param sc.data           A data.frame indicating the scRNA-seq data; each column is a cell and each row is a gene
 #' @param ST.data.column    A vector containing the gene expression of a given spot
+#' @param method.use        a character string indicating which correlation coefficient (or covariance) is to be computed: "pearson", "kendall" or "spearman"
 #' @return A vector of correlations between cells and one spot 
 #' @export
 CalcCor <- function(sc.data,
@@ -39,7 +41,7 @@ CalcCos <- function(sc.data,
 #' Find cell most correlated with the given spot.
 #'
 #' A brief function to find the cell which has the largest correlation with the given spot.
-#'
+#' 
 #' @param cor.res   A vector of correlations/cosine similarity between cells and one spot; obtained by CalcCor or CalcCos
 #' @return A character; the name of the cell
 #' @export
@@ -54,6 +56,7 @@ FindTopCell <- function(cor.res){
 #' Based on the correlation, perform the forward selecting to decompose the spot by cells from scRNA-seq data;
 #' For one spot, do the iteration until the general correlation is larger than 0.8 or doesn't increase
 #'
+#' @import stats
 #' @param sc.data     A data.frame indicating the scRNA-seq data; each column is a cell and each row is a gene
 #' @param ST.data     A data.frame indicating the ST data; each column is a spot and each row is a gene
 #' @param spot.number The number of spot to choose; should be an integer indicating the column number in ST data

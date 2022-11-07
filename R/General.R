@@ -5,6 +5,7 @@
 #' @param x         The vector to randomize
 #' @param fraction  The fraction to randomize; a numeric value from 0 to 1
 #' @param method    Randomization methods: "shuffle" to randomly shuffle the given part of x; "uniform" to generate values from a unifrom distribution
+#' @param random.seed   Random seed to use. Default is NULL
 #' @return The after-randomized vactors
 #' @export
 RandomizeVector <- function(x,
