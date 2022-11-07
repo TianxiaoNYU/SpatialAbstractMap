@@ -4,7 +4,7 @@
 \alias{getMoran}
 \title{Compute Moran's I on given gene}
 \usage{
-getMoran(gene, dist_inv = spot_dist_inv)
+getMoran(gene, dist_inv)
 }
 \arguments{
 \item{gene}{A vector of gene's expression value. Should correspond to the IDM}

@@ -10,7 +10,7 @@
 #' @return A 2-value vector containing the observed Moran's I and the p-value
 #' @export
 getMoran <- function(gene,
-                     dist_inv = spot_dist_inv){
+                     dist_inv){
   res <- Moran.I(gene, dist_inv, scaled = T)
   return(c(res$observed, res$p.value))
 }

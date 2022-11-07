@@ -16,6 +16,7 @@ Imports:
     FNN,
     ggplot2,
     gstat,
+    lsa,
     randomcoloR,
     Rfast,
     sp,

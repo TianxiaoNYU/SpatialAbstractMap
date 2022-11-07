@@ -4,7 +4,7 @@
 #' 
 #' Find the neighbors of each single cells and merge them together into one meta-cell. Can be useful in blurring scRNA-seq data and obtaining the neighborhood information
 #' 
-#' @import FNN
+#' @importFrom FNN get.knn
 #' @param sc.data   A data.frame as the scRNA-seq data
 #' @param k         The number of neighbors to choose. An integer
 #' @return A data.frame containing the new scRNA-seq data after merging

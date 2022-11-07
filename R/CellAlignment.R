@@ -24,7 +24,8 @@ CalcCor <- function(sc.data,
 #' Calculate the cosine similarity between all scRNA-seq cells and one ST spots
 #'
 #' A brief function to calculate the cosine similarity between all cells compared to one spot in ST data
-#'
+#' 
+#' @importFrom lsa cosine
 #' @param sc.data           A data.frame indicating the scRNA-seq data; each column is a cell and each row is a gene
 #' @param ST.data.column    A vector containing the gene expression of a given spot
 #' @return A vector of cosine similarity between cells and one spot 

@@ -51,7 +51,7 @@ weightedVoronoiPlot <- function(centroids,
 #'
 #' Calculate the distance of each tile to different centroids. Can add weights on each centroids to apply the weighted clustering and thus generate the WVD
 #'
-#' @import Rfast
+#' @importFrom Rfast dista
 #' @param centroids       A data.frame, the coordinates (X, Y) of centroids in 2-D plate; should include "Weight" column as necessary input; can include "Class" as annotations
 #' @param grid_precluster A data.frame, recording the tile coordinats (X, Y)
 #' @param weight          A logical value, whether doing weighted clustering or not
@@ -61,9 +61,9 @@ distanceGrid <- function(centroids,
                          grid_precluster,
                          weight = F){
   # distance.matrix <- matrix(0, ncol = nrow(centroids), nrow = nrow(grid_precluster))
-  distance.matrix <- apply(centroids[,1:2], 1, function(x){Rfast::dista(t(x), 
-                                                                        grid_precluster,
-                                                                        type = "euclidean")})
+  distance.matrix <- apply(centroids[,1:2], 1, function(x){dista(t(x), 
+                                                                 grid_precluster,
+                                                                 type = "euclidean")})
   if(weight[1]){
     if(length(weight) == 1){
       weight <- centroids$Weight
