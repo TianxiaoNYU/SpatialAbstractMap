@@ -170,7 +170,7 @@ predictKriging <- function(spatial.data,
            device = "jpeg")
     p2_coord <- as.data.frame(spatial.data@coords)
     names(p2_coord) <- c("imagecol", "imagerow")
-    p2 <- gg_tile(gene.id, spatial.data@data, p2_coord)
+    p2 <- gg_spot(gene.id, spatial.data@data, p2_coord)
     ggsave(paste0(plot.save.dir, gene.id, "_Original.jpg"),
            p2,
            width = 3.8, height = 3.33,
