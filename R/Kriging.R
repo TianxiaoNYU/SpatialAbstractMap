@@ -143,6 +143,10 @@ predictKriging <- function(spatial.data,
                            Kriging.model,
                            plot.dir = "../plots/Kriging/",
                            save.plot = T){
+  if(sum(Kriging_model[[2]][,3] < 0)){
+    cat("Negative range fitted in the Kriging model; may suggest low spatial autocorrelation")
+    return(0)
+  }
   lzn.kriged <- krige(eval(parse(text = gene.id)) ~ 1,
                       spatial.data,
                       new_spatial_grid,
