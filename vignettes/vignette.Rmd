@@ -2,7 +2,7 @@
 title: "CancerAbstract Vignette"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{vignette}
+  %\VignetteIndexEntry{CancerAbstract Vignette}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -10,7 +10,9 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 7, 
+  fig.height = 7
 )
 ```
 
@@ -21,9 +23,9 @@ library(ggplot2)
 
 # Part I: Kriging Interpolation
 
-- Apply Kriging method on ST data
+Apply Kriging method on ST data
 ```{r}
-head(ST_expr_data)
+ST_expr_data[1:5, 1:5]
 ```
 
 ```{r}
