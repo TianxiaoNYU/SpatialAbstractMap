@@ -7,5 +7,5 @@ Tianxiao.Zhao@nyulangone.org
 
 ### Installation
 ```R
-devtools::install_github("tsinghua-ZTX/CancerAbstract")
+devtools::install_github("tsinghua-ZTX/CancerAbstract", build_vignettes = TRUE)
 ```
