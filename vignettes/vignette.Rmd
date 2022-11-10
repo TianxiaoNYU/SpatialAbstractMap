@@ -1,0 +1,68 @@
+---
+title: "CancerAbstract Vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(CancerAbstract)
+library(ggplot2)
+```
+
+# Part I: Kriging Interpolation
+
+- Apply Kriging method on ST data
+```{r}
+head(ST_expr_data)
+```
+
+```{r}
+head(spot_coord)
+```
+
+
+
+```{r}
+integrate_ST_data <- integrateCoordinate(ST_expr_data, spot_coord)
+Kriging_model <- fitKriging(integrate_ST_data, "IFI6", save.plot = F)
+finer_grid <- createGridDataframe(integrate_ST_data)
+Kriging_predict <- predictKriging(integrate_ST_data,
+                                  finer_grid,
+                                  "IFI6",
+                                  Kriging_model[[2]],
+                                  save.plot = F)
+Kriging_res <- data.frame(X = Kriging_predict@coords[,1],
+                          Y = Kriging_predict@coords[,2],
+                          var1.pred = Kriging_predict$var1.pred)
+```
+
+
+```{r}
+ggplot(data = Kriging_res) + 
+    geom_tile(aes(x = X, 
+                  y = Y, 
+                  fill = var1.pred)) + 
+    scale_fill_gradient2(low = "darkblue", 
+                         high = "yellow", 
+                         mid = "purple", 
+                         midpoint = max(Kriging_res$var1.pred, na.rm = T) / 2) +
+    theme_bw() + 
+    labs(x = "X / um", 
+         y = "Y / um", 
+         title = "IFI6 Kriging Interplocation", 
+         fill = "Predicted Expression") +
+    theme(aspect.ratio = 1)
+```
+
+
+
