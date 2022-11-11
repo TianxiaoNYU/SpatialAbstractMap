@@ -1,5 +1,5 @@
 Package: CancerAbstract
-Title: What the Package Does (One Line, Title Case)
+Title: Spatial Interpolation and Abstract Tumor Apatial Transcriptomics Data
 Version: 0.0.0.9000
 Authors@R: 
     person("Tianxiao", "Zhao", , "Tianxiao.Zhao@nyulangone.org", role = c("aut", "cre"))

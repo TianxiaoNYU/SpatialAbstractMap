@@ -23,16 +23,38 @@ library(ggplot2)
 
 # Part I: Kriging Interpolation
 
-Apply Kriging method on ST data
+Load the spatial transcriptomics data from package: 
+
+- **ST_expr_data**, representing the spot-by-gene expression metrix normalized by Seurat::SCTransform. 
+
 ```{r}
 ST_expr_data[1:5, 1:5]
 ```
+
+- **spot_coord**, representing the physical location (coordinates) of every spots. It should have the same row names as the expression matrix. Here in the example, we have two columns 'imagerow' and 'imagecol' as X and Y coordinates in $\mu m$. 
 
 ```{r}
 head(spot_coord)
 ```
 
 
+### Apply Kriging method on ST data
+
+As the first step of CancerAbstract, a Kriging interpolation is performed for a given gene. 
+
+```{r, eval=FALSE}
+Kriging_res <- SpatialKriging(spatial.data = ST_expr_data,  # spatial expression matrix
+                              spatial.coord = spot_coord,   # coordinates
+                              gene.id = "IFI6",             # gene id, a colname in spatial.data
+                              predict.grid.size = 20,       # grid size for interpolation
+                              Kriging.cutoff = 600,         # auotocorrelation effect range
+                              Kriging.width = 30,           # bin widths in Kriging sampling
+                              plot.dir = "./plots/Kriging/",# path to save figures
+                              save.plot = F                 # plot or not; default is T
+                              )
+```
+
+*SpatialKriging* contains 4 sub-functions that can be run separately as below:
 
 ```{r}
 integrate_ST_data <- integrateCoordinate(ST_expr_data, spot_coord)
