@@ -1,6 +1,6 @@
 Package: CancerAbstract
 Title: Spatial Interpolation and Abstract Tumor Apatial Transcriptomics Data
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     person("Tianxiao", "Zhao", , "Tianxiao.Zhao@nyulangone.org", role = c("aut", "cre"))
 Description: Generate the abstract map of tumor: identify cell-state neighborhood and interactions in human tumors and provide insights into the cancer cell community.
