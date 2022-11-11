@@ -56,6 +56,14 @@ Kriging_res <- SpatialKriging(spatial.data = ST_expr_data,  # spatial expression
 
 *SpatialKriging* contains 4 sub-functions that can be run separately as below:
 
+- integrateCoordinate: based on sp::coordinates(), integrate the ST expression matrix (STEM) and coordiantes together into one object
+
+- fitKriging: fit Kriging model on integrated data; should indicate specific gene id
+
+- createGridDataframe: create the new grid based on the original spatial coordinates; so far only support creating a rectangle space with square tiles
+
+- Kriging_predict: perform prediction / interpolation on newly created grid
+
 ```{r}
 integrate_ST_data <- integrateCoordinate(ST_expr_data, spot_coord)
 Kriging_model <- fitKriging(integrate_ST_data, "IFI6", save.plot = F)
@@ -70,6 +78,7 @@ Kriging_res <- data.frame(X = Kriging_predict@coords[,1],
                           var1.pred = Kriging_predict$var1.pred)
 ```
 
+Visualization of the interpolation results
 
 ```{r}
 ggplot(data = Kriging_res) + 
