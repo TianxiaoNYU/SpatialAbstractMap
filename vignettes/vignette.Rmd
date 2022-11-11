@@ -7,12 +7,17 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+<style>
+    pre {border: 0;}
+    img {border: 0;}
+</style>
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.width = 7, 
-  fig.height = 7
+  fig.width = 6, 
+  fig.height = 5
 )
 ```
 
@@ -21,7 +26,7 @@ library(CancerAbstract)
 library(ggplot2)
 ```
 
-# Part I: Kriging Interpolation
+## Part I: Kriging Interpolation
 
 Load the spatial transcriptomics data from package: 
 
