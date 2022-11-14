@@ -71,11 +71,11 @@ Kriging_res <- SpatialKriging(spatial.data = ST_expr_data,  # spatial expression
 
 ```{r}
 integrate_ST_data <- integrateCoordinate(ST_expr_data, spot_coord)
-Kriging_model <- fitKriging(integrate_ST_data, "IFI6", save.plot = F)
+Kriging_model <- fitKriging(integrate_ST_data, "CALD1", save.plot = F)
 finer_grid <- createGridDataframe(integrate_ST_data)
 Kriging_predict <- predictKriging(integrate_ST_data,
                                   finer_grid,
-                                  "IFI6",
+                                  "CALD1",
                                   Kriging_model[[2]],
                                   save.plot = F)
 Kriging_res <- data.frame(X = Kriging_predict@coords[,1],
@@ -84,6 +84,8 @@ Kriging_res <- data.frame(X = Kriging_predict@coords[,1],
 ```
 
 Visualization of the interpolation results
+
+- We can visualize the Kriging result by ggplot2::geom_tile() functions, which is designed to plot the square tiles whose color represents the expression level of the gene. You can also generate this plot by CancerAbstract::gg_tile()
 
 ```{r}
 ggplot(data = Kriging_res) + 
@@ -97,10 +99,27 @@ ggplot(data = Kriging_res) +
     theme_bw() + 
     labs(x = "X / um", 
          y = "Y / um", 
-         title = "IFI6 Kriging Interplocation", 
-         fill = "Predicted Expression") +
+         title = "CALD1 Kriging Interplocation", 
+         fill = "CALD1") +
     theme(aspect.ratio = 1)
 ```
+
+- As a comparison, one can also visualize the original spot-level data by CancerAbstract::gg_spot()
+
+```{r}
+gg_spot("CALD1", ST_expr_data, spot_coord)
+```
+
+
+## Part II: Weighted Voronoi Diagrams
+
+
+
+```{r}
+
+```
+
+
 
 
 
