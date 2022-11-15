@@ -133,14 +133,16 @@ head(Voronoi_connections)
 
 ```{r}
 ##  Calculate the Delaunay triangulation in WVD on tile-level
-grid_max <- ceiling(max(Voronoi_centroid[,1:2]))
-grid_unit <- grid_max / 200
-##  tmp_grid as the collection of tiles to do clustering; can be changed to other options
+grid_max <- ceiling(max(abs(Voronoi_centroid[,1:2])))
+grid_unit <- grid_max / 100
+##  tmp_grid as the collection of tiles to do clustering; 
+##    can be changed to other options
 tmp_grid <- data.frame(X = rep(seq(-grid_max, grid_max, by = grid_unit), 
                                times = 2*grid_max/grid_unit + 1),
                        Y = rep(seq(-grid_max, grid_max, by = grid_unit), 
                                each = 2*grid_max/grid_unit + 1))
-##  Use CancerAbstract::distanceGrid(), CancerAbstract::clusterGrid() to get Delaunay triangulations
+##  Use CancerAbstract::distanceGrid(), CancerAbstract::clusterGrid() 
+##    to get Delaunay triangulations
 grid_distance <- distanceGrid(Voronoi_centroid, tmp_grid[,1:2], weight = T)
 grid_distance_cluster <- clusterGrid(grid_distance)
 tmp_grid$Cluster <- grid_distance_cluster$Cluster
