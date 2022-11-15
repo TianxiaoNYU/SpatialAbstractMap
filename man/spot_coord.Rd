@@ -11,7 +11,7 @@ An object of class \code{data.frame} with 722 rows and 2 columns.
 spot_coord
 }
 \description{
-This is data to be included in my package
+The spatial coordinates of ST spots
 }
 \author{
 Tianxiao Zhao \email{Tianxiao.Zhao@nyulangone.org}

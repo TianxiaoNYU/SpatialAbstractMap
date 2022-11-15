@@ -1,6 +1,6 @@
 #' spot_coord
 #'
-#' This is data to be included in my package
+#' The spatial coordinates of ST spots
 #'
 #' @author Tianxiao Zhao \email{Tianxiao.Zhao@nyulangone.org}
 #' @keywords coordinates of spots
@@ -13,3 +13,19 @@
 #' @author Tianxiao Zhao \email{Tianxiao.Zhao@nyulangone.org}
 #' @keywords Spatial Transcriptomics data
 'ST_expr_data'
+
+#' Voronoi_centroid
+#'
+#' A data frame including the coorinates of cell state centroids after MDS. Also includes the weights to generate the WVD
+#'
+#' @author Tianxiao Zhao \email{Tianxiao.Zhao@nyulangone.org}
+#' @keywords Voronoi centroids
+'Voronoi_centroid'
+
+#' Voronoi_connections
+#'
+#' A data frame including the connections of cell state centroids after MDS. Also includes the weights to generate the WVD
+#'
+#' @author Tianxiao Zhao \email{Tianxiao.Zhao@nyulangone.org}
+#' @keywords Voronoi connections
+'Voronoi_connections'
