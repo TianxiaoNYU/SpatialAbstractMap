@@ -5,7 +5,7 @@
 \alias{Voronoi_centroid}
 \title{Voronoi_centroid}
 \format{
-An object of class \code{data.frame} with 16 rows and 4 columns.
+An object of class \code{data.frame} with 13 rows and 4 columns.
 }
 \usage{
 Voronoi_centroid

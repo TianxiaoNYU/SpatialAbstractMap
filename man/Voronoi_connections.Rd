@@ -5,7 +5,7 @@
 \alias{Voronoi_connections}
 \title{Voronoi_connections}
 \format{
-An object of class \code{data.frame} with 20 rows and 5 columns.
+An object of class \code{data.frame} with 9 rows and 5 columns.
 }
 \usage{
 Voronoi_connections

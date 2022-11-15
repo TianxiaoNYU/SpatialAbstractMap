@@ -113,12 +113,45 @@ gg_spot("CALD1", ST_expr_data, spot_coord)
 
 ## Part II: Weighted Voronoi Diagrams
 
+In this vignette, we provide a toy example that includes cancer cell state data to generate the weighted Voronoi diagrams as the abstract of the given tumor. 
+
+- After Kriging modeling on each cell state marker, we integrated the spatial distribution of all states by averaging their markers' relative expressions. Euclidean distances between every pair of states are calculated, and multidimensional scaling is used to help visualize the results.
+
+- How the cell state (centroid) coordinates look like:
+
+```{r}
+head(Voronoi_centroid)
+```
+
+- The connections between states / centroids
+
+```{r}
+head(Voronoi_connections)
+```
+
+- Plot the Weighted Voronoi Diagrams (WVD)
+
+```{r}
+##  Calculate the Delaunay triangulation in WVD on tile-level
+grid_max <- ceiling(max(Voronoi_centroid[,1:2]))
+grid_unit <- grid_max / 200
+##  tmp_grid as the collection of tiles to do clustering; can be changed to other options
+tmp_grid <- data.frame(X = rep(seq(-grid_max, grid_max, by = grid_unit), 
+                               times = 2*grid_max/grid_unit + 1),
+                       Y = rep(seq(-grid_max, grid_max, by = grid_unit), 
+                               each = 2*grid_max/grid_unit + 1))
+##  Use CancerAbstract::distanceGrid(), CancerAbstract::clusterGrid() to get Delaunay triangulations
+grid_distance <- distanceGrid(Voronoi_centroid, tmp_grid[,1:2], weight = T)
+grid_distance_cluster <- clusterGrid(grid_distance)
+tmp_grid$Cluster <- grid_distance_cluster$Cluster
+```
 
 
 ```{r}
-
+weightedVoronoiPlot(Voronoi_centroid,
+                    Voronoi_connections,
+                    tmp_grid)
 ```
-
 
 
 
