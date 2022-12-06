@@ -1,4 +1,4 @@
-# SAM: a generalized method to generate Spatial Abstract Map from spatial data
+# SAM: a computational method to generate Spatial Abstract Map from spatial transcriptomics data
 Tianxiao Zhao
 Tianxiao.Zhao@nyulangone.org
 ****
