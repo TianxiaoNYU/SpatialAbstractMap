@@ -7,7 +7,7 @@
 clusterGrid(distance.grid)
 }
 \arguments{
-\item{distance.grid}{A matrix from CancerAbstract::distanceGrid; include the distances of each tile to the centorids}
+\item{distance.grid}{A matrix from SpatialAbstractMap::distanceGrid; include the distances of each tile to the centorids}
 }
 \value{
 A data.frame including the cluster (centroid) and the corresponding distance (weighted or not)
