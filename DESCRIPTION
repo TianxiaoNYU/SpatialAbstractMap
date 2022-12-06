@@ -1,9 +1,9 @@
-Package: CancerAbstract
-Title: Spatial Interpolation and Abstract Tumor Apatial Transcriptomics Data
+Package: SpatialAbstractMap
+Title: SAM: a generalized method to generate spatial abstract map from spatial data
 Version: 0.1.0
 Authors@R: 
     person("Tianxiao", "Zhao", , "Tianxiao.Zhao@nyulangone.org", role = c("aut", "cre"))
-Description: Generate the abstract map of tumor: identify cell-state neighborhood and interactions in human tumors and provide insights into the cancer cell community.
+Description: The package is designed to capture the latent abstract structure from spatial data (mostly spatial transcriptomics data) by creating a spatial abstract map (SAM). It can simplify the complicated spatial structure provided with spatial annotations on your data. Spatial distances between different annotation labels are calculated and used to reflect the abstract structure.
 License: MIT + file LICENSE
 check_name: TRUE
 Encoding: UTF-8

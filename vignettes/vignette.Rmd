@@ -1,8 +1,8 @@
 ---
-title: "CancerAbstract Vignette"
+title: "SpatialAbstractMap Vignette"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{CancerAbstract Vignette}
+  %\VignetteIndexEntry{SpatialAbstractMap Vignette}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(CancerAbstract)
+library(SpatialAbstractMap)
 library(ggplot2)
 ```
 
@@ -45,7 +45,7 @@ head(spot_coord)
 
 ### Apply Kriging method on ST data
 
-As the first step of CancerAbstract, a Kriging interpolation is performed for a given gene. 
+As the first step of SpatialAbstractMap, a Kriging interpolation is performed for a given gene. 
 
 ```{r, eval=FALSE}
 Kriging_res <- SpatialKriging(spatial.data = ST_expr_data,  # spatial expression matrix
@@ -85,7 +85,7 @@ Kriging_res <- data.frame(X = Kriging_predict@coords[,1],
 
 Visualization of the interpolation results
 
-- We can visualize the Kriging result by ggplot2::geom_tile() functions, which is designed to plot the square tiles whose color represents the expression level of the gene. You can also generate this plot by CancerAbstract::gg_tile()
+- We can visualize the Kriging result by ggplot2::geom_tile() functions, which is designed to plot the square tiles whose color represents the expression level of the gene. You can also generate this plot by SpatialAbstractMap::gg_tile()
 
 ```{r}
 ggplot(data = Kriging_res) + 
@@ -104,7 +104,7 @@ ggplot(data = Kriging_res) +
     theme(aspect.ratio = 1)
 ```
 
-- As a comparison, one can also visualize the original spot-level data by CancerAbstract::gg_spot()
+- As a comparison, one can also visualize the original spot-level data by SpatialAbstractMap::gg_spot()
 
 ```{r}
 gg_spot("CALD1", ST_expr_data, spot_coord)
@@ -141,7 +141,7 @@ tmp_grid <- data.frame(X = rep(seq(-grid_max, grid_max, by = grid_unit),
                                times = 2*grid_max/grid_unit + 1),
                        Y = rep(seq(-grid_max, grid_max, by = grid_unit), 
                                each = 2*grid_max/grid_unit + 1))
-##  Use CancerAbstract::distanceGrid(), CancerAbstract::clusterGrid() 
+##  Use SpatialAbstractMap::distanceGrid(), SpatialAbstractMap::clusterGrid() 
 ##    to get Delaunay triangulations
 grid_distance <- distanceGrid(Voronoi_centroid, tmp_grid[,1:2], weight = T)
 grid_distance_cluster <- clusterGrid(grid_distance)

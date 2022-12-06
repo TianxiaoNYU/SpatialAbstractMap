@@ -79,7 +79,7 @@ distanceGrid <- function(centroids,
 #'
 #' Find the nearest centroids for every tile as the cluster results.
 #'
-#' @param distance.grid   A matrix from CancerAbstract::distanceGrid; include the distances of each tile to the centorids
+#' @param distance.grid   A matrix from SpatialAbstractMap::distanceGrid; include the distances of each tile to the centorids
 #' @return A data.frame including the cluster (centroid) and the corresponding distance (weighted or not)
 #' @export
 clusterGrid <- function(distance.grid){

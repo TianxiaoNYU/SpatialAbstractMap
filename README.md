@@ -1,4 +1,4 @@
-# CancerAbstract
+# SAM: a generalized method to generate Spatial Abstract Map from spatial data
 Tianxiao Zhao
 Tianxiao.Zhao@nyulangone.org
 ****
@@ -7,5 +7,6 @@ Tianxiao.Zhao@nyulangone.org
 
 ### Installation
 ```R
-devtools::install_github("tsinghua-ZTX/CancerAbstract", build_vignettes = TRUE)
+remotes::install_github("tsinghua-ZTX/SpatialAbstractMap", build_vignettes = TRUE)
 ```
+
