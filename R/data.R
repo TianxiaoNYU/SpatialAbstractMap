@@ -29,3 +29,11 @@
 #' @author Tianxiao Zhao \email{Tianxiao.Zhao@nyulangone.org}
 #' @keywords Voronoi connections
 'Voronoi_connections'
+
+#' c24
+#'
+#' A color palatte containing 24 different colors for visualization
+#'
+#' @author Tianxiao Zhao \email{Tianxiao.Zhao@nyulangone.org}
+#' @keywords color palatte
+'c24'

@@ -1,11 +1,9 @@
-library(randomcoloR)
 ####  Weighted Voronoi diagram
 ########## require package 'randomcoloR'
 #' Plot the Weighted Voronoi Diagram (WVD)
 #'
 #' Draw the weighted Voronoi diagram based on the centroids, clusters and connections.
 #'
-#' @importFrom randomcoloR distinctColorPalette
 #' @param centroids     A data.frame, the coordinates (X, Y) of centroids in 2-D plate; should include "Weight" column as necessary input; can include "Class" as annotations
 #' @param connections   A data.frame, indicating the coonections (correlations) between centroids; have 5 columns for start point (X, Y), end point (Xend, Yend), and the width of line (Weight)
 #' @param grid_clusters A data.frame, recording the tile coordinats (X, Y) and tile clusters (Cluster)
@@ -14,11 +12,17 @@ library(randomcoloR)
 weightedVoronoiPlot <- function(centroids,
                                 connections,
                                 grid_clusters){
+  c24 <- c(
+    "gold1","skyblue2", "#FB9A99", "palegreen2","#CAB2D6", "#FDBF6F",
+    "gray70", "khaki2", "maroon", "orchid1", "deeppink1", "blue1",
+    "steelblue4", "dodgerblue2", "#E31A1C", "green4", "#6A3D9A", "#FF7F00",
+    "darkturquoise", "green1", "yellow4", "yellow3", "darkorange4", "brown"
+  )
   set.seed(1111)
   p1 <- ggplot() +
     geom_tile(data = grid_clusters,
               aes(x = X, y = Y, fill = Cluster)) +
-    scale_fill_manual(values = distinctColorPalette(k = nrow(centroids)))
+    scale_fill_manual(values = c24[1:nrow(centroids)])
   # geom_text(data = centroids,
   #            aes(x = X, y = Y, label = Class),
   #           check_overlap = TRUE,
