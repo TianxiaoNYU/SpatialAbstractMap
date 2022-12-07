@@ -7,6 +7,6 @@ Tianxiao.Zhao@nyulangone.org
 
 ### Installation
 ```R
-remotes::install_github("tsinghua-ZTX/SpatialAbstractMap", build_vignettes = TRUE)
+remotes::install_github("TianxiaoNYU/SpatialAbstractMap", build_vignettes = TRUE)
 ```
 
