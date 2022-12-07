@@ -1,5 +1,58 @@
 ####  Weighted Voronoi diagram
-########## require package 'randomcoloR'
+####################    WVD pre-processing   ####################
+#' Pre-process the data for Weighted Voronoi Diagram (WVD)
+#'
+#' From the multidimensional scaling matrix, generate the centroids, connections and Voronoi cells
+#'
+#' @importFrom broom tidy
+#' @param mds.mat             Matrix containing the position of clusters after MDS
+#' @param centroid.weight     Numeric, weights in WVD when creating the Voronoi cells
+#' @param connection.weight   Numeric, connections whose weights greater than given values will be ploted
+#' @param grid.bound.factor   Numeric bigger than 1, how large lattice will be compared to the max value in MDS
+#' @param ngrid               Number of grids in lattice
+#' @return A list, including the information of 1) centroids; 2) connections; 3) Voronoi cells.
+#' @export
+WVDpreprocess <- function(mds.mat,
+                          centroid.weight = 0.5,
+                          connection.weight = 0.3,
+                          grid.bound.factor = 1.1,
+                          ngrid = 100){
+  WVD.centroids <- as.data.frame(mds.mat) %>%
+    mutate(Class = rownames(mds.mat))
+  colnames(WVD.centroids)[1:2] <- c("X", "Y")
+  WVD.centroids.weight <- apply(spatial_dist, 2, function(x)(sum(x > 0)))
+  WVD.centroids.weight <- WVD.centroids.weight^centroid.weight
+  WVD.centroids <- WVD.centroids %>%
+    mutate(Weight = WVD.centroids.weight)
+
+  centroid.distance <- dist(WVD.centroids[,1:2], upper = F)
+  centroid.distance <- as.data.frame(tidy(centroid.distance))
+  WVD.connections <- as.data.frame(matrix(0, ncol = 5, nrow = nrow(centroid.distance)))
+  colnames(WVD.connections) <- c("X", "Y", "Xend", "Yend", "Weight")
+  for(i in 1:nrow(WVD.connections)){
+    WVD.connections$Weight[i] <- centroid.distance$distance[i]
+    WVD.connections$X[i] <- WVD.centroids$X[which(WVD.centroids$Class == centroid.distance$item1[i])]
+    WVD.connections$Y[i] <- WVD.centroids$Y[which(WVD.centroids$Class == centroid.distance$item1[i])]
+    WVD.connections$Xend[i] <- WVD.centroids$X[which(WVD.centroids$Class == centroid.distance$item2[i])]
+    WVD.connections$Yend[i] <- WVD.centroids$Y[which(WVD.centroids$Class == centroid.distance$item2[i])]
+  }
+  WVD.connections$Weight <- (max(WVD.connections$Weight) - WVD.connections$Weight) / max(WVD.connections$Weight)
+  WVD.connections <- WVD.connections %>%
+    filter(Weight > connection.weight)
+
+  grid_max <- (max(abs(WVD.centroids[,1:2]))) * grid.bound.factor
+  grid_unit <- grid_max / ngrid
+  WVD.grid <- data.frame(X = rep(seq(-grid_max, grid_max, by = grid_unit),
+                                 times = 2*grid_max/grid_unit + 1),
+                         Y = rep(seq(-grid_max, grid_max, by = grid_unit),
+                                 each = 2*grid_max/grid_unit + 1))
+
+  grid_distance <- distanceGrid(WVD.centroids, WVD.grid[,1:2], weight = T)
+  grid_distance_cluster <- clusterGrid(grid_distance)
+  WVD.grid$Cluster <- grid_distance_cluster$Cluster
+  return(list(WVD.centroids, WVD.connections, WVD.grid))
+}
+
 #' Plot the Weighted Voronoi Diagram (WVD)
 #'
 #' Draw the weighted Voronoi diagram based on the centroids, clusters and connections.

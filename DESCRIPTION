@@ -12,11 +12,14 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.2
 Imports: 
     ape,
+    broom,
     dplyr,
     FNN,
     ggplot2,
     gstat,
     lsa,
+    move,
+    mrf2d,
     Rfast,
     sp,
     stats
