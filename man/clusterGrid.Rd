@@ -4,10 +4,12 @@
 \alias{clusterGrid}
 \title{Grid Generation: Cluster tiles based on the distance}
 \usage{
-clusterGrid(distance.grid)
+clusterGrid(distance.grid, max.range = 10)
 }
 \arguments{
 \item{distance.grid}{A matrix from SpatialAbstractMap::distanceGrid; include the distances of each tile to the centorids}
+
+\item{max.range}{The max range when clustering; grids beyond this value will be clustered as "Outlier"}
 }
 \value{
 A data.frame including the cluster (centroid) and the corresponding distance (weighted or not)

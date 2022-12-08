@@ -6,20 +6,26 @@
 \usage{
 WVDpreprocess(
   mds.mat,
+  spatial.distribution,
   centroid.weight = 0.5,
   connection.weight = 0.3,
   grid.bound.factor = 1.1,
+  max.range = 10,
   ngrid = 100
 )
 }
 \arguments{
 \item{mds.mat}{Matrix containing the position of clusters after MDS}
 
+\item{spatial.distribution}{Cluster of tiles in a sparse form; should be a ntile-by-ncluster matrix}
+
 \item{centroid.weight}{Numeric, weights in WVD when creating the Voronoi cells}
 
 \item{connection.weight}{Numeric, connections whose weights greater than given values will be ploted}
 
 \item{grid.bound.factor}{Numeric bigger than 1, how large lattice will be compared to the max value in MDS}
+
+\item{max.range}{The max range when clustering; grids beyond this value will be clustered as "Outlier"}
 
 \item{ngrid}{Number of grids in lattice}
 }
