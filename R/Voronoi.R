@@ -63,11 +63,13 @@ WVDpreprocess <- function(mds.mat,
 #' @param centroids     A data.frame, the coordinates (X, Y) of centroids in 2-D plate; should include "Weight" column as necessary input; can include "Class" as annotations
 #' @param connections   A data.frame, indicating the coonections (correlations) between centroids; have 5 columns for start point (X, Y), end point (Xend, Yend), and the width of line (Weight)
 #' @param grid_clusters A data.frame, recording the tile coordinats (X, Y) and tile clusters (Cluster)
+#' @param print.label   Logical value, determining whether plot cluster labels on WVD; default is TRUE
 #' @return A ggplot2 object, the weighted Voronoi diagram
 #' @export
 weightedVoronoiPlot <- function(centroids,
                                 connections,
-                                grid_clusters){
+                                grid_clusters,
+                                print.label = T){
   c24 <- c(
     "gold1","skyblue2", "#FB9A99", "palegreen2","#CAB2D6", "#FDBF6F",
     "gray70", "khaki2", "maroon", "orchid1", "deeppink1", "blue1",
@@ -83,7 +85,8 @@ weightedVoronoiPlot <- function(centroids,
   }
   p1 <- ggplot() +
     geom_tile(data = grid_clusters,
-              aes(x = X, y = Y, fill = Cluster)) +
+              aes(x = X, y = Y,
+                  fill = Cluster)) +
     scale_fill_manual(values = col_palatte)
   for(i in 1:nrow(connections)){
     tmp_connections <- connections[i,]
@@ -106,6 +109,14 @@ weightedVoronoiPlot <- function(centroids,
           panel.grid.minor = element_blank(),
           panel.background = element_blank(),
           panel.border = element_blank())
+  if(print.label){
+    max.jitter <- max(centroids[,1:2]) / 8
+    p1 <- p1 +
+      geom_text(data = centroids,
+                aes(x = X, y = Y,label = Class),
+                fontface = "bold",
+                position = position_jitter(width = max.jitter, height = max.jitter))
+  }
   return(p1)
 }
 

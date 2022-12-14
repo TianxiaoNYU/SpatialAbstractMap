@@ -4,7 +4,7 @@
 \alias{weightedVoronoiPlot}
 \title{Plot the Weighted Voronoi Diagram (WVD)}
 \usage{
-weightedVoronoiPlot(centroids, connections, grid_clusters)
+weightedVoronoiPlot(centroids, connections, grid_clusters, print.label = T)
 }
 \arguments{
 \item{centroids}{A data.frame, the coordinates (X, Y) of centroids in 2-D plate; should include "Weight" column as necessary input; can include "Class" as annotations}
@@ -12,6 +12,8 @@ weightedVoronoiPlot(centroids, connections, grid_clusters)
 \item{connections}{A data.frame, indicating the coonections (correlations) between centroids; have 5 columns for start point (X, Y), end point (Xend, Yend), and the width of line (Weight)}
 
 \item{grid_clusters}{A data.frame, recording the tile coordinats (X, Y) and tile clusters (Cluster)}
+
+\item{print.label}{Logical value, determining whether plot cluster labels on WVD; default is TRUE}
 }
 \value{
 A ggplot2 object, the weighted Voronoi diagram
