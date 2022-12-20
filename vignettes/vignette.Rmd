@@ -21,95 +21,96 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, message=FALSE}
 library(SpatialAbstractMap)
-library(ggplot2)
+library(tidyverse)
 library(ggrepel)
 ```
 
-## Part I: Kriging Interpolation
 
-Load the spatial transcriptomics data from package: 
+## Part I: Simulation
 
-- **ST_expr_data**, representing the spot-by-gene expression metrix normalized by Seurat::SCTransform. 
+SAM is capable of simulating the spot-level spatial transciptomics data via Markov Random Field (MRF). In general, given the grid and parameter matrix, SAM can build the spatial structure of annotations like cell type or cell state that mimic the real spatial patterns. We will show you an example with 4 clusters (cell types) in a 120x120 grid.
 
+- Simulation function
 ```{r}
-ST_expr_data[1:5, 1:5]
+Z <- simulateST(height = 120,
+                width = 120,
+                ncluster = 4,
+                param.mat = c(0.02, -0.1, -0.2, -0.4, 
+                              -0.1, 0, -0.15, -0.35, 
+                              -0.2, -0.15, 0, -0.1, 
+                              -0.4, -0.35, -0.1, 0.02) * 0.74,
+                ncycle = 25,
+                max.norm = 3,
+                plot = F,
+                random.seed = 1111)
 ```
 
-- **spot_coord**, representing the physical location (coordinates) of every spots. It should have the same row names as the expression matrix. Here in the example, we have two columns 'imagerow' and 'imagecol' as X and Y coordinates in $\mu m$. 
+```{r, echo=FALSE}
+Z <- Z + 1
+Z_long <- matrix(0, ncol = 3, nrow = 120 * 120)
+for(i in 1:120){
+  for(j in 1:120){
+    id_tmp <- (120*(i-1) + j)
+    Z_long[id_tmp,1] <- i
+    Z_long[id_tmp,2] <- j
+    Z_long[id_tmp,3] <- Z[i,j]
+  }
+}
+colnames(Z_long) <- c("X", "Y", "Cluster")
+Z_long <- as.data.frame(Z_long)
+class_list <- c(1,2,3,4)
+spatial_dist <- matrix(0, nrow = nrow(Z_long), ncol = length(class_list))
+for(i in 1:length(class_list)){
+  spatial_dist[,i] <- as.numeric(Z_long$Cluster == class_list[i])
+}
+colnames(spatial_dist) <- class_list
+rownames(spatial_dist) <- rownames(Z_long)
+spatial_dist <- apply(spatial_dist, 2, function(x){x / sum(x)})
+```
 
-```{r}
-head(spot_coord)
+```{r, echo=FALSE}
+ggplot(data = Z_long) + 
+  geom_tile(aes(x = X, y = Y, fill = as.factor(Cluster))) +
+  scale_fill_manual(values = c24[1:4]) + 
+  labs(fill = "Cluster") + 
+  theme_void() + 
+  theme(aspect.ratio = 1)
 ```
 
 
-### Apply Kriging method on ST data
+In this example, we simulated 4 different clusters with a spatial structure look like this:
 
-As the first step of SpatialAbstractMap, a Kriging interpolation is performed for a given gene. 
-
-```{r, eval=FALSE}
-Kriging_res <- SpatialKriging(spatial.data = ST_expr_data,  # spatial expression matrix
-                              spatial.coord = spot_coord,   # coordinates
-                              gene.id = "IFI6",             # gene id, a colname in spatial.data
-                              predict.grid.size = 20,       # grid size for interpolation
-                              Kriging.cutoff = 600,         # auotocorrelation effect range
-                              Kriging.width = 30,           # bin widths in Kriging sampling
-                              plot.dir = "./plots/Kriging/",# path to save figures
-                              save.plot = F                 # plot or not; default is T
-                              )
+```{r, echo=FALSE, out.height="50%"}
+original_model <- matrix(c(0.02, -0.1, -0.2, -0.4, 
+                           -0.1, 0, -0.15, -0.35, 
+                           -0.2, -0.15, 0, -0.1, 
+                           -0.4, -0.35, -0.1, 0.02) * 0.7,
+                         4, 4)
+original_model_exp <- -(original_model)
+tmp <- as.data.frame(cmdscale(original_model_exp, k = 2)) %>%
+  mutate(cluster = 1:4)
+ggplot(data = tmp) + 
+  geom_line(aes(x = -V1, y = V2),
+            color = "gray",
+            linewidth = 3) + 
+  geom_point(aes(x = -V1, y = V2, col = as.factor(cluster)),
+             size = 15) + 
+  theme_void() + 
+  scale_color_manual(values = c24[1:4]) + 
+  coord_fixed(ratio = 1, 
+              xlim = c(-0.13, 0.2), 
+              ylim = c(-0.05, 0.05)) + 
+  labs(color = "Cluster", x = NULL, y = NULL) + 
+  theme(axis.ticks.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.y = element_blank(),
+        legend.position = "top")
 ```
 
-*SpatialKriging* contains 4 sub-functions that can be run separately as below:
-
-- integrateCoordinate: based on sp::coordinates(), integrate the ST expression matrix (STEM) and coordiantes together into one object
-
-- fitKriging: fit Kriging model on integrated data; should indicate specific gene id
-
-- createGridDataframe: create the new grid based on the original spatial coordinates; so far only support creating a rectangle space with square tiles
-
-- Kriging_predict: perform prediction / interpolation on newly created grid
-
-```{r}
-integrate_ST_data <- integrateCoordinate(ST_expr_data, spot_coord)
-Kriging_model <- fitKriging(integrate_ST_data, "CALD1", save.plot = F)
-finer_grid <- createGridDataframe(integrate_ST_data)
-Kriging_predict <- predictKriging(integrate_ST_data,
-                                  finer_grid,
-                                  "CALD1",
-                                  Kriging_model[[2]],
-                                  save.plot = F)
-Kriging_res <- data.frame(X = Kriging_predict@coords[,1],
-                          Y = Kriging_predict@coords[,2],
-                          var1.pred = Kriging_predict$var1.pred)
-```
-
-Visualization of the interpolation results
-
-- We can visualize the Kriging result by ggplot2::geom_tile() functions, which is designed to plot the square tiles whose color represents the expression level of the gene. You can also generate this plot by SpatialAbstractMap::gg_tile()
-
-```{r}
-ggplot(data = Kriging_res) + 
-    geom_tile(aes(x = X, 
-                  y = Y, 
-                  fill = var1.pred)) + 
-    scale_fill_gradient2(low = "darkblue", 
-                         high = "yellow", 
-                         mid = "purple", 
-                         midpoint = max(Kriging_res$var1.pred, na.rm = T) / 2) +
-    theme_bw() + 
-    labs(x = "X / um", 
-         y = "Y / um", 
-         title = "CALD1 Kriging Interplocation", 
-         fill = "CALD1") +
-    theme(aspect.ratio = 1)
-```
-
-- As a comparison, one can also visualize the original spot-level data by SpatialAbstractMap::gg_spot()
-
-```{r}
-gg_spot("CALD1", ST_expr_data, spot_coord)
-```
+where the distance between spots indicates their spatial distance in the simulation. As observed in both plots, yellow is close to blue and green is close to red. 
 
 
 ## Part II: Weighted Voronoi Diagrams
@@ -157,5 +158,91 @@ weightedVoronoiPlot(Voronoi_centroid,
 ```
 
 
+
+
+## Part III: Kriging Interpolation
+
+Load the spatial transcriptomics data from package: 
+
+- **ST_expr_data**, representing the spot-by-gene expression metrix normalized by Seurat::SCTransform. 
+
+```{r}
+ST_expr_data[1:5, 1:5]
+```
+
+- **spot_coord**, representing the physical location (coordinates) of every spots. It should have the same row names as the expression matrix. Here in the example, we have two columns 'imagerow' and 'imagecol' as X and Y coordinates in $\mu m$. 
+
+```{r}
+head(spot_coord)
+```
+
+
+### Apply Kriging method on ST data
+
+As the first step of SpatialAbstractMap, a Kriging interpolation is performed for a given gene. 
+
+```{r, eval=FALSE}
+Kriging_res <- SpatialKriging(spatial.data = ST_expr_data,  # spatial expression matrix
+                              spatial.coord = spot_coord,   # coordinates
+                              gene.id = "IFI6",             # gene id, a colname in spatial.data
+                              predict.grid.size = 20,       # grid size for interpolation
+                              Kriging.cutoff = 600,         # auotocorrelation effect range
+                              Kriging.width = 30,           # bin widths in Kriging sampling
+                              plot.dir = "./plots/Kriging/",# path to save figures
+                              save.plot = F                 # plot or not; default is T
+                              )
+```
+
+*SpatialKriging* contains 4 sub-functions that can be run separately as below:
+
+- integrateCoordinate: based on sp::coordinates(), integrate the ST expression matrix (STEM) and coordiantes together into one object
+
+- fitKriging: fit Kriging model on integrated data; should indicate specific gene id
+
+- createGridDataframe: create the new grid based on the original spatial coordinates; so far only support creating a rectangle space with square tiles
+
+- Kriging_predict: perform prediction / interpolation on newly created grid
+
+```{r, eval=T}
+integrate_ST_data <- integrateCoordinate(ST_expr_data, spot_coord)
+Kriging_model <- fitKriging(integrate_ST_data, "CALD1", save.plot = F)
+finer_grid <- createGridDataframe(integrate_ST_data,
+                                  predict.grid.size = 20)
+Kriging_predict <- predictKriging(integrate_ST_data,
+                                  finer_grid,
+                                  "CALD1",
+                                  Kriging_model[[2]],
+                                  save.plot = F)
+Kriging_res <- data.frame(X = Kriging_predict@coords[,1],
+                          Y = Kriging_predict@coords[,2],
+                          var1.pred = Kriging_predict$var1.pred)
+```
+
+Visualization of the interpolation results
+
+- We can visualize the Kriging result by ggplot2::geom_tile() functions, which is designed to plot the square tiles whose color represents the expression level of the gene. You can also generate this plot by SpatialAbstractMap::gg_tile()
+
+```{r}
+ggplot(data = Kriging_res) + 
+    geom_tile(aes(x = X, 
+                  y = Y, 
+                  fill = var1.pred)) + 
+    scale_fill_gradient2(low = "darkblue", 
+                         high = "yellow", 
+                         mid = "purple", 
+                         midpoint = max(Kriging_res$var1.pred, na.rm = T) / 2) +
+    theme_bw() + 
+    labs(x = "X / um", 
+         y = "Y / um", 
+         title = "CALD1 Kriging Interplocation", 
+         fill = "CALD1") +
+    theme(aspect.ratio = 1)
+```
+
+- As a comparison, one can also visualize the original spot-level data by SpatialAbstractMap::gg_spot()
+
+```{r}
+gg_spot("CALD1", ST_expr_data, spot_coord)
+```
 
 
